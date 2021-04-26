@@ -1,4 +1,4 @@
- 
+/* verilator lint_off CASEINCOMPLETE */
 module azadi_soc_top #(
   
   parameter logic [31:0] JTAG_ID = 32'h 0000_0001,
@@ -33,7 +33,19 @@ module azadi_soc_top #(
   output          [`SPI_SS_NB-1:0] ss_o,        
   output                           sclk_o,      
   output                           sd_o,       
-  input                            sd_i 
+  input                            sd_i, 
+  
+  // Temp interface added
+  output re_o,
+  output we_o,
+  output addr_o,
+  output wdata_o, // not using
+  output be_o,
+  input  rdata_i, // not using 
+  input  error_i,
+  
+  input  CLK_REF,
+  output CLK_LC
 
 );
 //logic clock;
@@ -115,6 +127,9 @@ assign gpio_o = gpio_out;
 
   tlul_pkg::tl_h2d_t xbar_to_spi;
   tlul_pkg::tl_d2h_t spi_to_xbar;
+  
+  tlul_pkg::tl_h2d_t xbar_to_temp; // added
+  tlul_pkg::tl_d2h_t temp_to_xbar; // added
 
   // interrupt vector
   logic [40:0] intr_vector;
@@ -366,7 +381,8 @@ xbar_periph periph_switch (
   .tl_adc_i           (),
   .tl_qspi_o          (),
   .tl_qspi_i          (),
-
+  .tl_temp_o		  (xbar_to_temp), // added
+  .tl_temp_i          (temp_to_xbar), // added
   .scanmode_i         ()
 );
 
@@ -531,5 +547,25 @@ uart u_uart0(
   .intr_rx_timeout_o       (intr_uart0_rx_timeout   ),
   .intr_rx_parity_err_o    (intr_uart0_rx_parity_err) 
 );
+//added
+tlul_adapter_tempsensor u_tempsense( 
+  .clk_i				   (clock),
+  .rst_ni       		   (system_rst_ni),
+  
+  .tl_i					   (xbar_to_temp),
+  .tl_o                    (temp_to_xbar),
+  
+  .re_o   				   (re_o),
+  .we_o					   (we_o),
+  .addr_o				   (addr_o),
+  .wdata_o     			   (wdata_o),
+  .be_o    				   (be_o),
+  .rdata_i				   (rdata_i),
+  .error_i      		   (error_i),
+  .CLK_REF				   (CLK_REF),
+  .CLK_LC				   (CLK_LC)
+);
+  
 
 endmodule
+/* verilator lint_on CASEINCOMPLETE */

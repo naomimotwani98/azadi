@@ -19,6 +19,7 @@ package tl_periph_pkg;
   localparam logic [31:0] ADDR_SPACE_CAN1  = 32'h 40100000;
   localparam logic [31:0] ADDR_SPACE_ADC   = 32'h 40200000;
   localparam logic [31:0] ADDR_SPACE_QSPI  = 32'h 40300000;
+  localparam logic [31:0] ADDR_SPACE_TEMP  = 32'h 40400000;
 
   localparam logic [31:0] ADDR_MASK_UART0 = 32'h 0000ffff;
   localparam logic [31:0] ADDR_MASK_UART1 = 32'h 0000ffff;
@@ -33,9 +34,10 @@ package tl_periph_pkg;
   localparam logic [31:0] ADDR_MASK_CAN1  = 32'h 0000ffff;
   localparam logic [31:0] ADDR_MASK_ADC   = 32'h 0000ffff;
   localparam logic [31:0] ADDR_MASK_QSPI  = 32'h 0000ffff;
+  localparam logic [31:0] ADDR_MASK_TEMP  = 32'h 0000ffff;
 
   localparam int N_HOST   = 1;
-  localparam int N_DEVICE = 13;
+  localparam int N_DEVICE = 14;
 
   typedef enum int {
     TlUart0 = 0,
@@ -50,7 +52,8 @@ package tl_periph_pkg;
     TlCan0 = 9,
     TlCan1 = 10,
     TlAdc = 11,
-    TlQspi = 12
+    TlQspi = 12,
+    Tltemp = 13
   } tl_device_e;
 
   typedef enum int {

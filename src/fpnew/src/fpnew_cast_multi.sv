@@ -10,9 +10,10 @@
 // specific language governing permissions and limitations under the License.
 
 // Author: Stefan Mach <smach@iis.ee.ethz.ch>
-
 //`include "/home/merl-lab/fyp/azadi/src/fpnew/src/common_cells/include/common_cells/registers.svh"
 ///`include "/home/merl/github_repos/azadi/src/fpnew/src/common_cells/include/common_cells/registers.svh"
+// verilator lint_off LATCH
+
 module fpnew_cast_multi #(
   parameter fpnew_pkg::fmt_logic_t   FpFmtConfig  = '1,
   parameter fpnew_pkg::ifmt_logic_t  IntFmtConfig = '1,
@@ -601,8 +602,8 @@ module fpnew_cast_multi #(
     localparam logic [MAN_BITS-1:0] QNAN_MANTISSA = 2**(MAN_BITS-1);
 
     if (FpFmtConfig[fmt]) begin : active_format
-      always_comb begin : special_results
-        logic [FP_WIDTH-1:0] special_res;
+          always_comb begin : special_results
+            logic [FP_WIDTH-1:0] special_res;
         special_res = info_q.is_zero
                       ? input_sign_q << FP_WIDTH-1 // signed zero
                       : {1'b0, QNAN_EXPONENT, QNAN_MANTISSA}; // qNaN
@@ -758,3 +759,5 @@ module fpnew_cast_multi #(
   assign out_valid_o     = out_pipe_valid_q[NUM_OUT_REGS];
   assign busy_o          = (| {inp_pipe_valid_q, mid_pipe_valid_q, out_pipe_valid_q});
 endmodule
+// verilator lint_on LATCH
+

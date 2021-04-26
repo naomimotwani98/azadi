@@ -49,7 +49,7 @@ module tlul_err import tlul_pkg::*; (
         'h0: begin // 1 Byte
           addr_sz_chk  = 1'b1;
           mask_chk     = ~|(tl_i.a_mask & ~mask);
-          fulldata_chk = |(tl_i.a_mask & mask);
+          fulldata_chk =  |(tl_i.a_mask & mask);
         end
 
         'h1: begin // 2 Byte
@@ -73,9 +73,9 @@ module tlul_err import tlul_pkg::*; (
         end
       endcase
     end else begin
-      addr_sz_chk  = 1'b0;
-      mask_chk     = 1'b0;
-      fulldata_chk = 1'b0;
+      addr_sz_chk  = 1'b1; //1'b0;
+      mask_chk     = 1'b1; // 1'b0;
+      fulldata_chk = 1'b1; // 1'b0; valid goes low
     end
   end
 
